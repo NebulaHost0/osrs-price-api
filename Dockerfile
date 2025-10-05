@@ -39,6 +39,9 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 # Copy migrations
 COPY migrations/ ./migrations/
 
+# Create directory for SSL certificates
+RUN mkdir -p /app/certs
+
 # Set ownership
 RUN chown -R appuser:appuser /app
 

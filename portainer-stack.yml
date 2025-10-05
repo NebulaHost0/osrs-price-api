@@ -6,13 +6,20 @@ services:
     container_name: osrs-price-api
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "443:8443"  # Map HTTPS port 443 to internal 8443
+    volumes:
+      # Mount SSL certificates from Portainer volumes or bind mounts
+      - ./certs/origin-cert.pem:/app/certs/cert.pem:ro
+      - ./certs/origin-key.pem:/app/certs/key.pem:ro
     environment:
-      # Add your database URL here (from Railway, Supabase, etc.)
+      # Database configuration
       DATABASE_URL: postgresql://postgres:YOUR_PASSWORD@YOUR_HOST:PORT/railway
-      PORT: 8080
+      PORT: 8443
+      # SSL certificate paths
+      SSL_CERT_FILE: /app/certs/cert.pem
+      SSL_KEY_FILE: /app/certs/key.pem
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8443/health"]
       interval: 30s
       timeout: 10s
       retries: 3

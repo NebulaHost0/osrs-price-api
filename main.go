@@ -24,7 +24,7 @@ func main() {
 	}
 	// Load database configuration
 	dbConfig := database.LoadConfig()
-	
+
 	// Connect to database
 	db, err := database.Connect(dbConfig)
 	if err != nil {
@@ -59,19 +59,7 @@ func main() {
 	router := gin.Default()
 
 	// Add CORS middleware to allow frontend access
-	router.Use(func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
-
-		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
-			return
-		}
-
-		c.Next()
-	})
+	router.Use(api.CORSMiddleware())
 
 	// Setup API routes
 	apiHandler := api.NewHandler(osrsClient, priceCache, repo)
@@ -83,11 +71,24 @@ func main() {
 		port = "8080"
 	}
 
+	// Check for SSL certificate files
+	certFile := os.Getenv("SSL_CERT_FILE")
+	keyFile := os.Getenv("SSL_KEY_FILE")
+
 	// Setup graceful shutdown
 	go func() {
-		log.Printf("Starting OSRS Price API server on port %s", port)
-		if err := router.Run(":" + port); err != nil {
-			log.Fatalf("Failed to start server: %v", err)
+		if certFile != "" && keyFile != "" {
+			log.Printf("Starting OSRS Price API server with TLS on port %s", port)
+			log.Printf("Using certificate: %s", certFile)
+			if err := router.RunTLS(":"+port, certFile, keyFile); err != nil {
+				log.Fatalf("Failed to start TLS server: %v", err)
+			}
+		} else {
+			log.Printf("Starting OSRS Price API server (HTTP) on port %s", port)
+			log.Println("Note: Set SSL_CERT_FILE and SSL_KEY_FILE for HTTPS")
+			if err := router.Run(":" + port); err != nil {
+				log.Fatalf("Failed to start server: %v", err)
+			}
 		}
 	}()
 
