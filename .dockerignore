@@ -1,0 +1,34 @@
+# Exclude unnecessary files from Docker build context
+.git/
+.github/
+.gitignore
+.env
+.env*
+*.md
+!README.md
+
+# Build artifacts
+bin/
+dist/
+*.exe
+
+# Frontend
+osrs-ge-tracker/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Test files
+*_test.go
+testdata/
+
+# Temporary
+tmp/
+temp/

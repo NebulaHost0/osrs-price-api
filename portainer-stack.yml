@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  osrs-api:
+    image: ghcr.io/YOUR-USERNAME/osrs-price-api:latest
+    container_name: osrs-price-api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # Add your database URL here (from Railway, Supabase, etc.)
+      DATABASE_URL: postgresql://postgres:YOUR_PASSWORD@YOUR_HOST:PORT/railway
+      PORT: 8080
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
