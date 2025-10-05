@@ -36,3 +36,6 @@ temp/
 
 # Exclude frontend
 osrs-ge-tracker/
+
+
+certs/
