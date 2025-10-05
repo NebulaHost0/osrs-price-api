@@ -1,0 +1,38 @@
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+bin/
+dist/
+osrs-price-api
+osrs-price-api-*
+
+# Test files
+*.test
+*.out
+coverage.txt
+
+# Dependencies
+vendor/
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Temporary
+tmp/
+temp/
+
+# Exclude frontend
+osrs-ge-tracker/

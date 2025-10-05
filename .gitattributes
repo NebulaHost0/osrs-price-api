@@ -1,0 +1,17 @@
+# Go files
+*.go text eol=lf
+
+# Scripts
+*.sh text eol=lf
+
+# SQL migrations
+*.sql text eol=lf
+
+# Config files
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+
+# Markdown
+*.md text eol=lf
